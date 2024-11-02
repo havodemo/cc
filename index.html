@@ -41,11 +41,11 @@
                                 <input type="tel" class="form-control" id="cvCode" name="cvCode" placeholder="CVC" required maxlength="4" />
                             </div>
                         
-                            <!-- Card Owner Field -->
-                            <div class="form-group">
-                                <label for="cardOwner">CARD OWNER</label>
-                                <input type="text" class="form-control" id="cardOwner" name="cardOwner" placeholder="Card Owner Name" required />
-                            </div>
+                           <!-- Card Owner Field -->
+<div class="form-group">
+    <label for="cardOwner">CARD OWNER</label>
+    <input type="text" class="form-control" id="cardOwner" name="cardOwner" placeholder="Card Owner Name" required />
+</div>
                         
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-warning btn-lg btn-block">Process Payment</button>
@@ -97,6 +97,12 @@
                 }
                 $(this).val(input);
             });
+
+              // JavaScript to restrict input to letters only for Card Owner
+    document.getElementById('cardOwner').addEventListener('input', function (e) {
+        // Remove any character that is not a letter
+        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
 
             $('#cvCode').on('input', function () {
                 let input = $(this).val().replace(/\D/g, '');
